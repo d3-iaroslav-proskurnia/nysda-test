@@ -1,0 +1,62 @@
+{
+  "name": "nysda-playwright-ui-tests",
+  "version": "1.0.0",
+  "description": "UI Test Automation Framework using Playwright",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test:single": "rm -rf playwright && pnpm exec playwright test test1.spec.ts",
+    "test": "rm -rf playwright && pnpm exec playwright test",
+    "test:debug": "rm -rf playwright && pnpm exec playwright test --debug",
+    "test:ui": "rm -rf playwright && pnpm exec playwright test --ui",
+    "test:ci": "rm -rf playwright && UI_TEST_ENV=local CI=true pnpm exec playwright test --workers=4",
+    "test:dev": "rm -rf playwright && UI_TEST_ENV=dev pnpm exec playwright test --workers=4",
+    "test:qa": "rm -rf playwright && UI_TEST_ENV=qa pnpm exec playwright test --workers=4",
+    "test:stg": "rm -rf playwright && UI_TEST_ENV=stg pnpm exec playwright test --workers=4",
+    "test:prod": "rm -rf playwright && UI_TEST_ENV=prod pnpm exec playwright test --workers=4",
+    "test:dev:ui": "rm -rf playwright && UI_TEST_ENV=dev pnpm exec playwright test --ui",
+    "test:qa:ui": "rm -rf playwright && UI_TEST_ENV=qa pnpm exec playwright test --ui",
+    "test:stg:ui": "rm -rf playwright && UI_TEST_ENV=stg pnpm exec playwright test --ui",
+    "test:prod:ui": "rm -rf playwright && UI_TEST_ENV=prod pnpm exec playwright test --ui",
+    "test:record": "pnpm exec playwright codegen",
+    "testdev:record": "rm -rf playwright && UI_TEST_ENV=dev pnpm exec playwright codegen",
+    "test:qa:record": "rm -rf playwright && UI_TEST_ENV=qa pnpm exec playwright codegen",
+    "test:stg:record": "rm -rf playwright && UI_TEST_ENV=stg pnpm exec playwright codegen",
+    "test:prod:record": "rm -rf playwright && UI_TEST_ENV=prod pnpm exec playwright codegen",
+    "test:headed": "rm -rf playwright && pnpm exec playwright test --headed",
+    "test:dev:headed": "rm -rf playwright && UI_TEST_ENV=dev pnpm exec playwright test --headed",
+    "test:qa:headed": "rm -rf playwright && UI_TEST_ENV=qa pnpm exec playwright test --headed",
+    "test:stg:headed": "rm -rf playwright && UI_TEST_ENV=stg pnpm exec playwright test --headed",
+    "test:prod:headed": "rm -rf playwright && UI_TEST_ENV=prod pnpm exec playwright test --headed",
+    "test:report": "pnpm exec playwright show-report",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "playwright",
+    "ui",
+    "test",
+    "automation"
+  ],
+  "author": "iaroslav proskurnia",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.7.0",
+    "@playwright/test": "^1.53.0",
+    "@types/node": "^24.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
+    "dotenv": "^16.5.0",
+    "eslint": "^9.27.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.0",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.1.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.5.3",
+    "typescript-eslint": "^8.32.1"
+  },
+  "dependencies": {
+    "csv-parser": "^3.0.0"
+  }
+}
