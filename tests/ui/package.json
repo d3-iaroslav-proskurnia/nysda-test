@@ -29,6 +29,8 @@
     "test:stg:headed": "rm -rf playwright && UI_TEST_ENV=stg pnpm exec playwright test --headed",
     "test:prod:headed": "rm -rf playwright && UI_TEST_ENV=prod pnpm exec playwright test --headed",
     "test:report": "pnpm exec playwright show-report",
+    "axe-scan": "npx playwright test",
+    "axe-report": "npx axe-playwright-report build-report",
     "lint": "eslint .",
     "format": "prettier --write ."
   },

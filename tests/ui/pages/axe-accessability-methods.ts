@@ -1,13 +1,13 @@
 import {Page, Locator, expect} from '@playwright/test'
 import {axeScan} from "axe-playwright-report";
+import {GlobalActionsAndElements} from "@pages/global-actions-and-elements";
 
-export class Axe_accessability_Methods{
-    readonly page: Page;
+export class Axe_accessability_Methods extends GlobalActionsAndElements {
 
 
     constructor(page: Page) {
-        this.page = page;
-        // Main Top Nav Elements
+        super(page);
+        // Main Elements
     }
 
     @axeScan()

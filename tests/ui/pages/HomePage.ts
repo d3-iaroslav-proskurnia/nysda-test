@@ -1,14 +1,14 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import {axeScan} from "axe-playwright-report";
+import {GlobalActionsAndElements} from "@pages/global-actions-and-elements";
 
-export class HomePage {
-  readonly page: Page;
+export class HomePage extends GlobalActionsAndElements {
   readonly Logo: Locator;
   readonly WelcomeText: Locator;
   readonly LogoutBttn: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
     this.Logo = page.locator('img.logo');
     this.WelcomeText = page.getByRole('heading', {name: 'Welcome to PDCMS'});
     this.LogoutBttn = page.getByRole('button', { name: 'Log out' });
