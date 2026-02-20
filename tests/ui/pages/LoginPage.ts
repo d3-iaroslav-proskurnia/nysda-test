@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { testConfig } from 'testConfig';
 import { ENV } from 'playwright.config';
+import {axeScan} from "axe-playwright-report";
 
 // TODO: FILE is only copy/pasted. Require Review & change locators & methods
 export class LoginPage {
@@ -41,6 +42,7 @@ export class LoginPage {
     await this.page.waitForLoadState('load'); // Waits for the page to be fully loaded
   }
 
+  @axeScan()
   async validateControls() {
     await this.page.waitForLoadState('load'); // Waits for the page to be fully loaded
     await expect(this.Logo).toBeVisible();

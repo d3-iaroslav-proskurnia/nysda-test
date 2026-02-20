@@ -42,10 +42,11 @@
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^9.7.0",
-    "@playwright/test": "^1.53.0",
+    "@playwright/test": "^1.58.2",
     "@types/node": "^24.0.3",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
+    "axe-playwright-report": "^1.2.4",
     "dotenv": "^16.5.0",
     "eslint": "^9.27.0",
     "eslint-config-prettier": "^10.1.5",

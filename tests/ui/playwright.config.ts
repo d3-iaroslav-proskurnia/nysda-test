@@ -8,7 +8,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Determine which environment to load
-export const ENV = process.env.UI_TEST_ENV || 'local';
+export const ENV = process.env.UI_TEST_ENV || 'qa';
 if (!ENV || ![`local`, `dev`, `qa`, `stg`].includes(ENV)) {
   console.log(
     `Please provide a correct environment value like "npx cross-env ENV=dev|qa|stg"`,
