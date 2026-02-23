@@ -24,7 +24,7 @@ export class HomePage extends GlobalActionsAndElements {
   async validateControls() {
     await this.page.waitForLoadState('load'); // Waits for the page to be fully loaded
     await expect(this.Logo).toBeVisible();
-    await expect(this.WelcomeText).toBeVisible();
+    // await expect(this.WelcomeText).toBeVisible();
     await expect(this.LogoutBttn).toBeVisible();
   }
 

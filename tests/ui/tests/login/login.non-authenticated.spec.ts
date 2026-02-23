@@ -1,10 +1,12 @@
 import { test as baseTest, expect } from '@playwright/test';
 import { LoginPage } from '@pages/LoginPage';
 import { HomePage } from '@pages/HomePage';
+import {ForgotPasswordPage} from "@pages/forgot-password-page";
 
 const test = baseTest.extend<{
     loginPage: LoginPage;
     homePage: HomePage;
+    forgotPasswordPage: ForgotPasswordPage;
 }>({
     loginPage: async ({ page, context }, use) => {
         await context.clearCookies();
@@ -12,6 +14,9 @@ const test = baseTest.extend<{
     },
     homePage: async ({ page }, use) => {
         await use(new HomePage(page));
+    },
+    forgotPasswordPage: async ({ page }, use) => {
+        await use(new ForgotPasswordPage(page));
     },
 });
 
@@ -82,6 +87,24 @@ test.describe('Login and Logout Tests', () => {
 
             await expect(homePage.LogoutBttn).not.toBeVisible();
             await loginPage.validateControls();
+        });
+    });
+
+    test(`Verify Forgot password Page`, async ({
+                                              page,
+                                              loginPage,
+                                              forgotPasswordPage
+                                          }) => {
+        await test.step(`Navigate to the Application`, async () => {
+            await loginPage.navigateByURL();
+        });
+
+        await test.step(`Click on "Forgot Password"`, async () => {
+            await loginPage.ForgotPasswordLink.click();
+            await expect(forgotPasswordPage.resendPasswordBtn).toBeVisible();
+        });
+        await test.step(`Validate Login page controls`, async () => {
+            await forgotPasswordPage.validateControls();
         });
     });
 });
