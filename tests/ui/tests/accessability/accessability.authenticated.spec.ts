@@ -1,5 +1,5 @@
+import {test as baseTest, expect, Locator} from "@playwright/test";
 import {Axe_accessability_Methods} from "@pages/axe-accessability-methods";
-import {test as baseTest, expect, Locator} from "playwright/types/test";
 import {HomePage} from "@pages/HomePage";
 
 const test = baseTest.extend<{
@@ -29,47 +29,47 @@ test.describe('Accessability fast check suite', ()=> {
         });
 
         await test.step(`Navigate to the Home page -> Past events tab`, async () => {
-            await axeMethods.navigateToSpecificPageAndPerformScan('/?tab=past');
+            await axeMethods.navigateToSpecificPageAndPerformScan('?tab=past');
         });
 
         await test.step(`Navigate to the Home page -> Active cases tab`, async () => {
-            await axeMethods.navigateToSpecificPageAndPerformScan('/?tab=active-cases');
+            await axeMethods.navigateToSpecificPageAndPerformScan('?tab=active-cases');
         });
 
         await test.step(`Navigate to the Calendar`, async () => {
-            await axeMethods.navigateToSpecificPageAndPerformScan('/calendar?date=2026-02-23');
+            await axeMethods.navigateToSpecificPageAndPerformScan('calendar?date=2026-02-23');
         });
 
         await test.step(`Navigate to the Clients page`, async () => {
-            await axeMethods.navigateToSpecificPageAndPerformScan('/clients');
+            await axeMethods.navigateToSpecificPageAndPerformScan('clients');
         });
 
         await test.step(`Navigate to the Clients -> ADD page`, async () => {
-            await axeMethods.navigateToSpecificPageAndPerformScan('/clients/add');
+            await axeMethods.navigateToSpecificPageAndPerformScan('clients/add');
         });
 
         await test.step(`Navigate to the Cases page`, async () => {
-            await axeMethods.navigateToSpecificPageAndPerformScan('/cases');
+            await axeMethods.navigateToSpecificPageAndPerformScan('cases');
         });
 
         await test.step(`Navigate to the Report Builder page`, async () => {
-            await axeMethods.navigateToSpecificPageAndPerformScan('/reports/report-builder/personal');
+            await axeMethods.navigateToSpecificPageAndPerformScan('reports/report-builder/personal');
         });
 
         await test.step(`Navigate to the Report ILS 195 page (staff details)`, async () => {
-            await axeMethods.navigateToSpecificPageAndPerformScan('/reports/ils195/staff-details');
+            await axeMethods.navigateToSpecificPageAndPerformScan('reports/ils195/staff-details');
         });
 
         await test.step(`Navigate to the Report PRR 195 page`, async () => {
-            await axeMethods.navigateToSpecificPageAndPerformScan('/reports/prr195');
+            await axeMethods.navigateToSpecificPageAndPerformScan('reports/prr195');
         });
 
         await test.step(`Navigate to the Report pre-canned page`, async () => {
-            await axeMethods.navigateToSpecificPageAndPerformScan('/reports/pre-canned');
+            await axeMethods.navigateToSpecificPageAndPerformScan('reports/pre-canned');
         });
 
         await test.step(`Navigate to the HELP page`, async () => {
-            await axeMethods.navigateToSpecificPageAndPerformScan('/help');
+            await axeMethods.navigateToSpecificPageAndPerformScan('help');
         });
 
     });
