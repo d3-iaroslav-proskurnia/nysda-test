@@ -70,7 +70,8 @@ export default defineConfig({
         video: 'retain-on-failure',
         trace: 'retain-on-failure',
       },
-      testMatch: ['**/*.authenticated.*.ts','**/*-check.spec.ts'],
+      testMatch: '**/*.authenticated.*.ts',
+
       dependencies: ['auth_setup'],
     },
 
@@ -86,18 +87,18 @@ export default defineConfig({
       testMatch: '**/*.non-authenticated.*.ts',
     },
 
-    {
-      name: 'accessability_authenticated',
-      use: {
-        storageState: AUTH_FILE_PATH,
-        ...devices['Desktop Chrome'],
-        screenshot: 'only-on-failure',
-        video: 'retain-on-failure',
-        trace: 'retain-on-failure',
-      },
-      testMatch: '**/accessability-check.spec.ts',
-      dependencies: ['auth_setup'],
-    },
+    // {
+    //   name: 'accessability_authenticated',
+    //   use: {
+    //     storageState: AUTH_FILE_PATH,
+    //     ...devices['Desktop Chrome'],
+    //     screenshot: 'only-on-failure',
+    //     video: 'retain-on-failure',
+    //     trace: 'retain-on-failure',
+    //   },
+    //   testMatch: '**/accessability.authenticated.spec.ts',
+    //   dependencies: ['auth_setup'],
+    // },
 
     // {
     //   name: 'Microsoft Edge authenticated',
