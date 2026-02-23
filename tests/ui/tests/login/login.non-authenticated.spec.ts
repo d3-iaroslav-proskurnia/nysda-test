@@ -25,7 +25,6 @@ test.describe('Login and Logout Tests', () => {
     test(`Verify Login page`, async ({
         page,
         loginPage,
-        homePage
     }) => {
         await test.step(`Navigate to the Application`, async () => {
             await loginPage.navigateByURL();

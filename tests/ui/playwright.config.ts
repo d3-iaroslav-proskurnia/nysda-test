@@ -70,7 +70,7 @@ export default defineConfig({
         video: 'retain-on-failure',
         trace: 'retain-on-failure',
       },
-      testMatch: '**/*.authenticated.*.ts',
+      testMatch: ['**/*.authenticated.*.ts','**/*-check.spec.ts'],
       dependencies: ['auth_setup'],
     },
 
