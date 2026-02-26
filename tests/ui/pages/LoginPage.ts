@@ -1,10 +1,11 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { testConfig } from 'testConfig';
 import { ENV } from 'playwright.config';
+import {axeScan} from "axe-playwright-report";
+import {GlobalActionsAndElements} from "@pages/global-actions-and-elements";
 
 // TODO: FILE is only copy/pasted. Require Review & change locators & methods
-export class LoginPage {
-  readonly page: Page;
+export class LoginPage extends GlobalActionsAndElements {
   readonly Logo: Locator;
   readonly Title: Locator;
   readonly WelcomeText: Locator;
@@ -16,7 +17,7 @@ export class LoginPage {
   readonly ProgressBar: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
     this.Logo = page.locator('img.logo');
     this.Title = page.getByRole('heading', {name: 'Log In to your account'});
     this.WelcomeText = page.locator('p', { hasText: 'Welcome back! Enter your email and password to continue.' });
@@ -41,6 +42,7 @@ export class LoginPage {
     await this.page.waitForLoadState('load'); // Waits for the page to be fully loaded
   }
 
+  @axeScan()
   async validateControls() {
     await this.page.waitForLoadState('load'); // Waits for the page to be fully loaded
     await expect(this.Logo).toBeVisible();

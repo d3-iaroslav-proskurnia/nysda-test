@@ -29,6 +29,8 @@
     "test:stg:headed": "rm -rf playwright && UI_TEST_ENV=stg pnpm exec playwright test --headed",
     "test:prod:headed": "rm -rf playwright && UI_TEST_ENV=prod pnpm exec playwright test --headed",
     "test:report": "pnpm exec playwright show-report",
+    "axe-scan": "npx playwright test",
+    "axe-report": "npx axe-playwright-report build-report",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
@@ -42,10 +44,11 @@
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^9.7.0",
-    "@playwright/test": "^1.53.0",
+    "@playwright/test": "^1.58.2",
     "@types/node": "^24.0.3",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
+    "axe-playwright-report": "^1.2.4",
     "dotenv": "^16.5.0",
     "eslint": "^9.27.0",
     "eslint-config-prettier": "^10.1.5",

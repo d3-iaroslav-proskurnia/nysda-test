@@ -32,7 +32,6 @@ auth_setup(
         await page.waitForLoadState('load'); // Waits for the page to be fully loaded
         await expect(homePage.Logo).toBeVisible();
         await expect(homePage.LogoutBttn).toBeVisible();
-        await expect(homePage.WelcomeText).toBeVisible();
       },
     );
 

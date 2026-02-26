@@ -48,3 +48,9 @@ Thumbs.db
 
 # Other
 dist
+
+# Playwright
+/blob-report/
+
+#Axe
+/axe-playwright-report/

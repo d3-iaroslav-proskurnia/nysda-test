@@ -8,7 +8,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Determine which environment to load
-export const ENV = process.env.UI_TEST_ENV || 'local';
+export const ENV = process.env.UI_TEST_ENV || 'qa';
 if (!ENV || ![`local`, `dev`, `qa`, `stg`].includes(ENV)) {
   console.log(
     `Please provide a correct environment value like "npx cross-env ENV=dev|qa|stg"`,
@@ -62,7 +62,7 @@ export default defineConfig({
     { name: 'auth_setup', testMatch: '**/auth.setup.ts' },
 
     {
-      name: 'chromium authenticated',
+      name: 'chromium_authenticated',
       use: {
         storageState: AUTH_FILE_PATH,
         ...devices['Desktop Chrome'],
@@ -71,12 +71,13 @@ export default defineConfig({
         trace: 'retain-on-failure',
       },
       testMatch: '**/*.authenticated.*.ts',
+
       dependencies: ['auth_setup'],
     },
 
     // All tests for a non-authenticated user
     {
-      name: 'chromium non-authenticated',
+      name: 'chromium_non-authenticated',
       use: {
         ...devices['Desktop Chrome'],
         screenshot: `only-on-failure`,
@@ -85,6 +86,19 @@ export default defineConfig({
       },
       testMatch: '**/*.non-authenticated.*.ts',
     },
+
+    // {
+    //   name: 'accessability_authenticated',
+    //   use: {
+    //     storageState: AUTH_FILE_PATH,
+    //     ...devices['Desktop Chrome'],
+    //     screenshot: 'only-on-failure',
+    //     video: 'retain-on-failure',
+    //     trace: 'retain-on-failure',
+    //   },
+    //   testMatch: '**/accessability.authenticated.spec.ts',
+    //   dependencies: ['auth_setup'],
+    // },
 
     // {
     //   name: 'Microsoft Edge authenticated',
