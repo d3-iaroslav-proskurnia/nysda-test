@@ -1,16 +1,21 @@
 import {test as baseTest, expect, Locator} from "@playwright/test";
 import {Axe_accessability_Methods} from "@pages/axe-accessability-methods";
 import {HomePage} from "@pages/HomePage";
+import {CalendarPage} from "@pages/calendar-page";
 
 const test = baseTest.extend<{
     homePage: HomePage;
     axeMethods: Axe_accessability_Methods;
+    calendarPage: CalendarPage;
 }>({
     homePage: async ({ page }, use) => {
         await use(new HomePage(page));
     },
     axeMethods: async ({ page }, use) => {
         await use(new Axe_accessability_Methods(page));
+    },
+    calendarPage: async ({ page }, use) => {
+        await use(new CalendarPage(page));
     },
 });
 
@@ -21,7 +26,7 @@ test.describe('Accessability fast check suite', ()=> {
     })
 
     test(`Scanning pages within app`, async ({
-                                         page,
+                                         calendarPage,
                                          axeMethods,
                                      }) => {
         await test.step(`Navigate to the Home page -> Upcoming tab`, async () => {
@@ -37,7 +42,7 @@ test.describe('Accessability fast check suite', ()=> {
         });
 
         await test.step(`Navigate to the Calendar`, async () => {
-            await axeMethods.navigateToSpecificPageAndPerformScan('calendar?date=2026-02-23');
+            await axeMethods.navigateToSpecificPageAndPerformScan(`calendar?date=${calendarPage.getTodayDate()}`);
         });
 
         await test.step(`Navigate to the Clients page`, async () => {
@@ -71,6 +76,53 @@ test.describe('Accessability fast check suite', ()=> {
         await test.step(`Navigate to the HELP page`, async () => {
             await axeMethods.navigateToSpecificPageAndPerformScan('help');
         });
+
+    });
+
+    test(`Calendar detailed scan`, async ({
+                                                 page,
+                                                 axeMethods,
+        calendarPage
+                                             }) => {
+
+        await test.step(`Navigate to the Calendar`, async () => {
+            await page.goto(`calendar?date=${calendarPage.getTodayDate()}`,{waitUntil:"load"});
+        });
+
+        await test.step(`Open Dialog Modal`, async () => {
+            await calendarPage.createEventButton.click();
+            await expect(calendarPage.createSpecialEventModal).toBeVisible();
+        });
+
+        await test.step(`Selecting event type in dropdown and scanning dropdown`, async () => {
+            await calendarPage.eventTypeDropdown.click();
+            await axeMethods.findElementAndScanPageState(calendarPage.getFirstMatchDropdownOptionLocatorByText('Voucher Events'));
+            await calendarPage.getFirstMatchDropdownOptionLocatorByText('Voucher Events').click();
+        })
+
+        await test.step(`Selecting attorney in dropdown and scanning dropdown`, async () => {
+            await calendarPage.attyDropdown.click();
+            await axeMethods.findElementAndScanPageState(calendarPage.anyOptionInDropdown.first());
+            await calendarPage.anyOptionInDropdown.first().click();
+        })
+
+        await test.step(`Scanning calendar and time setter`, async () => {
+            await calendarPage.startDateCalendarBtn.click();
+            await axeMethods.findElementAndScanPageState(calendarPage.anyInnerDialogModal);
+            await calendarPage.titleDropdown.click();
+            await expect(calendarPage.anyInnerDialogModal).not.toBeVisible();
+            await calendarPage.startTimeClockBtn.click();
+            await axeMethods.findElementAndScanPageState(calendarPage.anyInnerDialogModal);
+            await calendarPage.titleDropdown.click();
+            await expect(calendarPage.anyInnerDialogModal).not.toBeVisible();
+        })
+
+        await test.step(`Click on Create Button and scanning modal with alerts`, async () => {
+            await calendarPage.createBtn.click()
+            await axeMethods.findElementAndScanPageState(page.getByText('Field is required').first());
+
+        })
+
 
     });
 
