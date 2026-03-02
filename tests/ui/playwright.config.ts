@@ -15,7 +15,7 @@ if (!ENV || ![`local`, `dev`, `qa`, `stg`].includes(ENV)) {
   );
   process.exit();
 }
-process.env.API_URL = testConfig[ENV].apiUrl;
+process.env.API_URL = testConfig[ENV].cmsApiUrl;
 
 /**
  * See https://playwright.dev/docs/test-configuration.

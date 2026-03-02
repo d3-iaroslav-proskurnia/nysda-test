@@ -42,7 +42,7 @@ test.describe('Accessability fast check suite', ()=> {
         });
 
         await test.step(`Navigate to the Calendar`, async () => {
-            await axeMethods.navigateToSpecificPageAndPerformScan(`calendar?date=${calendarPage.getTodayDate()}`);
+            await axeMethods.navigateToSpecificPageAndPerformScan(`calendar?date=${calendarPage.getTodayDate_YYYY_MM_DD()}`);
         });
 
         await test.step(`Navigate to the Clients page`, async () => {
@@ -86,7 +86,7 @@ test.describe('Accessability fast check suite', ()=> {
                                              }) => {
 
         await test.step(`Navigate to the Calendar`, async () => {
-            await page.goto(`calendar?date=${calendarPage.getTodayDate()}`,{waitUntil:"load"});
+            await page.goto(`calendar?date=${calendarPage.getTodayDate_YYYY_MM_DD()}`,{waitUntil:"load"});
         });
 
         await test.step(`Open Dialog Modal`, async () => {

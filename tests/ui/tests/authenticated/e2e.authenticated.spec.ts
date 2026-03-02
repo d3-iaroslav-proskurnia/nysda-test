@@ -1,0 +1,170 @@
+import {test as baseTest, expect, Locator} from '@playwright/test';
+import {ClientsPage} from "@pages/clients/clients-page";
+import {AddNewClientPage} from "@pages/clients/add-new-client-page";
+import {Axe_accessability_Methods} from "@pages/axe-accessability-methods";
+import {AddNewCasePage} from "@pages/cases/add-new-case-page";
+import {CasesPage} from "@pages/cases/cases-page";
+import {simpleCriminalCaseExample} from "@lib/storage/cases/criminal-case-storage"
+
+const test = baseTest.extend<{
+    clientsPage: ClientsPage;
+    addNewClientPage: AddNewClientPage;
+    axeMethods: Axe_accessability_Methods;
+    addNewCasePage: AddNewCasePage;
+    casesPage: CasesPage;
+}>({
+    clientsPage: async ({ page }, use) => {
+        await use(new ClientsPage(page));
+    },
+    addNewClientPage: async ({ page }, use) => {
+        await use(new AddNewClientPage(page));
+    },
+    axeMethods: async ({ page }, use) => {
+        await use(new Axe_accessability_Methods(page));
+    },
+    addNewCasePage: async ({ page }, use) => {
+        await use(new AddNewCasePage(page));
+    },
+    casesPage: async ({ page }, use) => {
+        await use(new CasesPage(page));
+    },
+});
+
+test.describe('End-to-end basic tests', () => {
+
+    test('Add New Criminal Case through adding Client with ONLY Required data via UI + verifications', async ({
+                                            page,
+                                            request,
+                                            clientsPage,
+                                            addNewClientPage,
+                                            axeMethods,
+                                            addNewCasePage,
+                                            casesPage,
+                                        }) => {
+
+        // Some data init
+        const clientInfoStepLabel:Locator = addNewClientPage.getStepLabelByName('Client Information');
+        const additionalDetailsStepLabel:Locator = addNewClientPage.getStepLabelByName('Additional Details');
+        const financialInfoStepLabel:Locator = addNewClientPage.getStepLabelByName('Financial information');
+        const clientFirstName = `Aqa_${addNewClientPage.generateRandomSmallCharString(6)}`;
+        // const clientLastName = `Last${addNewClientPage.generateRandomSmallCharString(6)}`
+        const clientCreationAlert = addNewClientPage.getAlertSnackbarByText('Pre Client have been created successfully');
+        const caseTypeStepLabel:Locator = addNewCasePage.getStepLabelByName('Case Type');
+        const caseDetailsStepLabel:Locator = addNewCasePage.getStepLabelByName('Case Details');
+        const caseEventsStepLabel:Locator = addNewCasePage.getStepLabelByName('Case Events');
+        const invalidCaseStepPopulationAlert:Locator = addNewCasePage.getAlertSnackbarByText('Some fields on this step are invalid. Please correct them to continue');
+        const defaultCriminalCaseData = simpleCriminalCaseExample;
+
+        // Data to be received
+        let clientCreationResponse:any
+        let createdCaseId:number
+        let formattedCaseFileNumber:string
+
+        await test.step('Navigate to the "Clients" page by URL', async () => {
+            await clientsPage.navigateByUrl();
+        })
+
+        await test.step('Click on "Add New Client" button', async () => {
+            await clientsPage.addNewClientBtn.click();
+        })
+
+        await test.step('Verify "Add New Client" page is opened properly', async () => {
+            await expect(clientInfoStepLabel).toContainClass('Mui-active');
+            await expect(additionalDetailsStepLabel).toContainClass('Mui-disabled');
+            await expect(financialInfoStepLabel).toContainClass('Mui-disabled');
+
+            // scan
+            await axeMethods.findElementAndScanPageState(addNewClientPage.pageStepper);
+        })
+
+        await test.step('Populate ONLY First name for the client', async () => {
+            await addNewClientPage.firstNameInputField.fill(clientFirstName);
+        })
+
+        await test.step('Click on "Add Case to Client" and verify transfer', async () => {
+            clientCreationResponse = await addNewClientPage.clickOnAddCaseToClientAndReturnResponse();
+            expect(clientCreationResponse.isSuccess).toBe(true);
+        })
+
+        await test.step('Alert Message Verification', async () => {
+            await expect(clientCreationAlert).toBeVisible();
+
+            // scan
+            await axeMethods.findElementAndScanPageState(clientCreationAlert);
+        })
+
+        await test.step('Add Case page verification', async () => {
+            expect(page.url()).toContain(`/clients/${clientCreationResponse.data}/cases/add`)
+            await expect(addNewCasePage.staticPageTitle).toContainText(clientFirstName);
+            await expect(caseTypeStepLabel).toContainClass('Mui-active');
+            await expect(caseDetailsStepLabel).toContainClass('Mui-disabled');
+            await expect(caseEventsStepLabel).toContainClass('Mui-disabled');
+        })
+
+        await test.step('Invalid Step Population alert triggering', async () => {
+            await addNewCasePage.getButtonByName('Next').click();
+            await expect(invalidCaseStepPopulationAlert).toBeVisible();
+
+            // scan
+            await axeMethods.findElementAndScanPageState(invalidCaseStepPopulationAlert);
+        })
+
+        await test.step('Populating "Case Matter" section', async () => {
+            await addNewCasePage.populateCaseMatterSection(defaultCriminalCaseData.matter,defaultCriminalCaseData.caseType);
+        })
+
+        await test.step('Proper Step Population -> moving to the next step', async () => {
+            await addNewCasePage.getButtonByName('Next').click();
+            await expect(caseTypeStepLabel).toContainClass('Mui-completed');
+            await expect(caseDetailsStepLabel).toContainClass('Mui-active');
+            await expect(caseEventsStepLabel).toContainClass('Mui-disabled');
+
+            // scan
+            await axeMethods.findElementAndScanPageState(caseDetailsStepLabel);
+        })
+
+        await test.step('Populate "Open Date" field', async () => {
+            await addNewCasePage.fillComplexDateFieldWithFormattedDate('Open Date',addNewCasePage.getTodayDate_MM_DD_YYYY());
+        })
+
+        await test.step('Proper Step Population -> moving to the next step', async () => {
+            await addNewCasePage.getButtonByName('Next').click();
+            await expect(caseTypeStepLabel).toContainClass('Mui-completed');
+            await expect(caseDetailsStepLabel).toContainClass('Mui-completed');
+            await expect(caseEventsStepLabel).toContainClass('Mui-active');
+
+            // scan
+            await axeMethods.findElementAndScanPageState(caseEventsStepLabel);
+        })
+
+        await test.step('Click on "Save And Exit" without setting any data on Optional step', async () => {
+            // setting interception
+            const addCaseResponsePromise = page.waitForResponse(
+                (response) => response.url().endsWith('/api/cases?api-version=1.0') && response.ok(),
+            );
+            await addNewCasePage.getButtonByName('Save And Exit').click();
+            const addCaseResponseInterception = await addCaseResponsePromise;
+            const addCaseResponseObj = await addCaseResponseInterception.json();
+            expect(addCaseResponseObj.isSuccess).toBe(true);
+            createdCaseId = addCaseResponseObj.data;
+        })
+
+        await test.step('Created Case Success Alert verification', async () => {
+            formattedCaseFileNumber = await casesPage.getFormattedCaseFileNumberViaApi(request,createdCaseId);
+            await expect(casesPage.getAlertSnackbarByText(`Case ${formattedCaseFileNumber} has been created`)).toBeVisible();
+            await expect(page).toHaveURL('/cases');
+        })
+
+        await test.step('Filter Cases page by caseFile number and verification', async () => {
+            await casesPage.caseNumberFilterField.fill(formattedCaseFileNumber);
+        })
+
+        await test.step('Created Case verification within cases table', async () => {
+            await expect(casesPage.getRowByCaseId(createdCaseId)).toBeVisible();
+            await expect(casesPage.getRowByCaseId(createdCaseId)).toContainText(formattedCaseFileNumber);
+        })
+
+
+    })
+
+})
