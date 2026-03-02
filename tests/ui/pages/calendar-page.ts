@@ -19,7 +19,7 @@ export class CalendarPage extends GlobalActionsAndElements {
 
     constructor(page: Page) {
         super(page);
-        this.createEventButton = this.anyButton.filter({hasText:'Create Event'});
+        this.createEventButton = this.getButtonByName('Create Event');
 
         // create Event modal
         this.createSpecialEventModal = this.anyDialogModal.filter({hasText:'Create Special Event'});
