@@ -75,6 +75,12 @@ export class GlobalActionsAndElements {
         return result;
     }
 
+    public generateX_requestIdForHeaderInApiRequests():string{
+        /*** Must-have parameter for headers of SOME requests (POST,UPDATE, etc.) in this project
+         There is no template, just better to use more than 13 numbers to identify AQA activity ***/
+        return `999000999${this.generateRandomNumberProperLength(9)}`;
+    }
+
     public getTodayDate_YYYY_MM_DD(){
         /*** returns date in format YYYY-MM-DD (2026-02-26)  ***/
         return new Date().toISOString().split('T')[0];
