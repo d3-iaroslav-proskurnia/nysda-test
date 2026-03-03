@@ -167,4 +167,43 @@ test.describe('End-to-end basic tests', () => {
 
     })
 
+    test('Create new Case via API + Case page verifications', async ({
+                                                                                                                  page,
+                                                                                                                  request,
+                                                                                                                  addNewClientPage,
+                                                                                                                  axeMethods,
+                                                                                                                  addNewCasePage,
+                                                                                                                  casesPage,
+                                                                                                              }) => {
+
+        // data init
+        let clientData:any;
+        let caseData:any
+
+        await test.step('Navigate to home page', async () => {
+            await page.goto(`/`,{waitUntil:"load"})
+        })
+
+        await test.step('Created client via API and get data', async () => {
+            clientData = await addNewClientPage.createRandomNewClientViaApiAndReturnData(request);
+        })
+
+        await test.step('Created new FamilyCase for created client via API and get data', async () => {
+            caseData = await addNewCasePage.createNewFamilyCaseViaApiAndReturnFullData(request,clientData.nameId)
+        })
+
+        await test.step('Navigate to created case details page', async () => {
+            await page.goto(`/cases/${caseData.id}/details`,{waitUntil:"load"})
+        })
+
+        await test.step('Case page verification', async () => {
+            const formattedCaseFileNumber = casesPage.convertCaseFileNumberToFormattedString(caseData.fileNumber);
+            await expect(casesPage.staticPageTitle).toHaveText(`Case No. ${formattedCaseFileNumber}`)
+
+            // scan
+            await axeMethods.findElementAndScanPageState(casesPage.staticPageTitle);
+        })
+
+    })
+
 })
