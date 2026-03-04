@@ -47,15 +47,13 @@ const test = baseTest.extend<{
 
 test.describe('End-to-end basic tests', () => {
 
-    test('Add New Criminal Case through adding Client with ONLY Required data via UI + verifications', async ({
-                                            page,
-                                            request,
-                                            clientsPage,
-                                            addNewClientPage,
-                                            axeMethods,
-                                            addNewCasePage,
-                                            casesPage,
-                                        }) => {
+    test('Add New Criminal Case through adding Client with ONLY Required data via UI + verifications', async ({page,
+                                                                                                                  request,
+                                                                                                                  clientsPage,
+                                                                                                                  addNewClientPage,
+                                                                                                                  axeMethods,
+                                                                                                                  addNewCasePage,
+                                                                                                                  casesPage,}) => {
 
         // Some data init
         const clientInfoStepLabel:Locator = addNewClientPage.getStepLabelByName('Client Information');
@@ -189,6 +187,7 @@ test.describe('End-to-end basic tests', () => {
                                                                                                                   axeMethods,
                                                                                                                   addNewCasePage,
                                                                                                                   casesPage,
+                                                                                                                  caseDetailsPage
                                                                                                               }) => {
 
         // data init
@@ -212,11 +211,11 @@ test.describe('End-to-end basic tests', () => {
         })
 
         await test.step('Case page verification', async () => {
-            const formattedCaseFileNumber = casesPage.convertCaseFileNumberToFormattedString(caseData.fileNumber);
-            await expect(casesPage.staticPageTitle).toHaveText(`Case No. ${formattedCaseFileNumber}`)
+            const formattedCaseFileNumber = caseDetailsPage.convertCaseFileNumberToFormattedString(caseData.fileNumber);
+            await expect(caseDetailsPage.staticPageTitle).toHaveText(`Case No. ${formattedCaseFileNumber}`)
 
             // scan
-            await axeMethods.findElementAndScanPageState(casesPage.staticPageTitle);
+            await axeMethods.findElementAndScanPageState(caseDetailsPage.staticPageTitle);
         })
 
     })
