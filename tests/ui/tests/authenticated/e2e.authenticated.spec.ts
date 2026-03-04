@@ -4,6 +4,9 @@ import {AddNewClientPage} from "@pages/clients/add-new-client-page";
 import {Axe_accessability_Methods} from "@pages/axe-accessability-methods";
 import {AddNewCasePage} from "@pages/cases/add-new-case-page";
 import {CasesPage} from "@pages/cases/cases-page";
+import{SingleCaseDetailsPage} from "@pages/cases/single-case-details.page";
+import {SingleCaseClosingFormPage} from "@pages/cases/single-case-closing-form.page";
+import {ClientProfilePage} from "@pages/clients/client-profile-page";
 import {simpleCriminalCaseExample} from "@lib/storage/cases/criminal-case-storage"
 
 const test = baseTest.extend<{
@@ -12,6 +15,9 @@ const test = baseTest.extend<{
     axeMethods: Axe_accessability_Methods;
     addNewCasePage: AddNewCasePage;
     casesPage: CasesPage;
+    caseDetailsPage: SingleCaseDetailsPage;
+    caseClosingFormPage: SingleCaseClosingFormPage;
+    clientProfilePage: ClientProfilePage;
 }>({
     clientsPage: async ({ page }, use) => {
         await use(new ClientsPage(page));
@@ -27,6 +33,15 @@ const test = baseTest.extend<{
     },
     casesPage: async ({ page }, use) => {
         await use(new CasesPage(page));
+    },
+    caseDetailsPage: async ({ page }, use) => {
+        await use(new SingleCaseDetailsPage(page));
+    },
+    caseClosingFormPage: async ({ page }, use) => {
+        await use(new SingleCaseClosingFormPage(page));
+    },
+    clientProfilePage: async ({ page }, use) => {
+        await use(new ClientProfilePage(page));
     },
 });
 
@@ -202,6 +217,56 @@ test.describe('End-to-end basic tests', () => {
 
             // scan
             await axeMethods.findElementAndScanPageState(casesPage.staticPageTitle);
+        })
+
+    })
+
+    test('Navigate to specific Case for Axe scans @accessibility', async ({ page,
+                                                                              caseDetailsPage,
+                                                                              caseClosingFormPage,
+                                                                              axeMethods}) => {
+
+        // data init
+        const preparedCaseId = '2688552363';
+
+        await test.step('Navigate to specific Case page and perform scan', async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan(`cases/${preparedCaseId}/details`);
+        })
+
+        await test.step('Move to closing Form tab', async () => {
+            await caseDetailsPage.closingFormTab.click();
+            await page.waitForLoadState('load')
+            await expect(caseDetailsPage.closingFormTab).toHaveAttribute('aria-selected','true');
+
+            // Scan
+            await axeMethods.findElementAndScanPageState(caseClosingFormPage.staticPageTitle);
+        })
+
+        await test.step('Expand all sections on Closing form tab', async () => {
+            await caseClosingFormPage.namedSectionHeaderExpander('Section 1').click();
+            await caseClosingFormPage.namedSectionHeaderExpander('Section 2').click();
+            await expect(caseClosingFormPage.namedSectionHeaderExpander('Section 1')).toHaveAttribute('aria-expanded','true');
+            await expect(caseClosingFormPage.namedSectionHeaderExpander('Section 2')).toHaveAttribute('aria-expanded','true');
+
+            // scan
+            await axeMethods.findElementAndScanPageState(caseClosingFormPage.namedSectionHeaderExpander('Section 2'));
+        })
+
+    })
+
+    test('Navigate to specific Client for Axe scans @accessibility', async ({ page,
+                                                                              clientProfilePage,
+                                                                              axeMethods}) => {
+
+        // data init
+        const preparedClientId = '560137745';
+
+        await test.step('Navigate to specific Client page and perform scan', async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan(`clients/${preparedClientId}`);
+        })
+
+        await test.step('Scan page for specific locator', async () => {
+            await axeMethods.findElementAndScanPageState(clientProfilePage.alsoKnownAsButton);
         })
 
     })
