@@ -19,16 +19,15 @@ const test = baseTest.extend<{
     },
 });
 
-test.describe('Accessability fast check suite', ()=> {
+test.describe('Accessibility fast check suite @accessibility', ()=> {
 
     test.beforeEach(async () => {
         console.log(`Starting test with name: "${test.info().title}"`);
     })
 
-    test(`Scanning pages within app`, async ({
-                                         calendarPage,
-                                         axeMethods,
-                                     }) => {
+    test(`Scanning pages within app`, async ({calendarPage, axeMethods,}) => {
+        test.slow(); // since lots of scanning, it takes approx 5 minutes
+
         await test.step(`Navigate to the Home page -> Upcoming tab`, async () => {
             await axeMethods.navigateToSpecificPageAndPerformScan('?tab=upcoming');
         });
@@ -77,13 +76,48 @@ test.describe('Accessability fast check suite', ()=> {
             await axeMethods.navigateToSpecificPageAndPerformScan('help');
         });
 
+        // Admin Section - Just in Case - ONLY several pages taken
+
+        await test.step(`Navigate to the Admin-account-users page`, async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan('admin/account/users');
+        });
+
+        await test.step(`Navigate to the Admin-account-officeInfo page`, async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan('admin/account/office');
+        });
+
+        await test.step(`Navigate to the Admin-account-permissions page`, async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan('admin/account/permissions');
+        });
+
+        await test.step(`Navigate to the Admin-account-logs page`, async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan('admin/account/logs');
+        });
+
+        await test.step(`Navigate to the Admin-maintenance-caseType page`, async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan('admin/maintenance/case-type');
+        });
+
+        await test.step(`Navigate to the Admin-maintenance-charges page`, async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan('admin/maintenance/charges');
+        });
+
+        await test.step(`Navigate to the Admin-maintenance-maritalStatus page`, async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan('admin/maintenance/marital-status');
+        });
+
+        await test.step(`Navigate to the Admin-maintenance-staff page`, async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan('admin/maintenance/staff');
+        });
+
+        await test.step(`Navigate to the Admin-help page`, async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan('admin/help');
+        });
+
+
     });
 
-    test(`Calendar detailed scan`, async ({
-                                                 page,
-                                                 axeMethods,
-        calendarPage
-                                             }) => {
+    test(`Calendar detailed scan`, async ({page,axeMethods,calendarPage}) => {
 
         await test.step(`Navigate to the Calendar`, async () => {
             await page.goto(`calendar?date=${calendarPage.getTodayDate_YYYY_MM_DD()}`,{waitUntil:"load"});

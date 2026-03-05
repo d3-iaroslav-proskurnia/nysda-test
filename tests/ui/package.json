@@ -29,7 +29,7 @@
     "test:stg:headed": "rm -rf playwright && UI_TEST_ENV=stg pnpm exec playwright test --headed",
     "test:prod:headed": "rm -rf playwright && UI_TEST_ENV=prod pnpm exec playwright test --headed",
     "test:report": "pnpm exec playwright show-report",
-    "axe-scan": "npx playwright test",
+    "axe-scan": "rimraf axe-playwright-report && npx playwright test",
     "axe-report": "npx axe-playwright-report build-report",
     "lint": "eslint .",
     "format": "prettier --write ."
@@ -60,6 +60,7 @@
     "typescript-eslint": "^8.32.1"
   },
   "dependencies": {
-    "csv-parser": "^3.0.0"
+    "csv-parser": "^3.0.0",
+    "rimraf": "^6.1.3"
   }
 }
