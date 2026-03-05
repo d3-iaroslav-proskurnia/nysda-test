@@ -19,13 +19,15 @@ const test = baseTest.extend<{
     },
 });
 
-test.describe('Accessability fast check suite', ()=> {
+test.describe('Accessibility fast check suite @accessibility', ()=> {
 
     test.beforeEach(async () => {
         console.log(`Starting test with name: "${test.info().title}"`);
     })
 
     test(`Scanning pages within app`, async ({calendarPage, axeMethods,}) => {
+        test.slow(); // since lots of scanning, it takes approx 5 minutes
+
         await test.step(`Navigate to the Home page -> Upcoming tab`, async () => {
             await axeMethods.navigateToSpecificPageAndPerformScan('?tab=upcoming');
         });
