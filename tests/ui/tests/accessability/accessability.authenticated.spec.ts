@@ -28,6 +28,11 @@ test.describe('Accessibility fast check suite @accessibility', ()=> {
     test(`Scanning pages within app`, async ({calendarPage, axeMethods,}) => {
         test.slow(); // since lots of scanning, it takes approx 5 minutes
 
+        // data init
+        const preparedCaseDetailId = '117899274';
+        const preparedAttorneyId = '30408704';
+        const preparedCourtLocationId = '4587520';
+
         await test.step(`Navigate to the Home page -> Upcoming tab`, async () => {
             await axeMethods.navigateToSpecificPageAndPerformScan('?tab=upcoming');
         });
@@ -110,10 +115,41 @@ test.describe('Accessibility fast check suite @accessibility', ()=> {
             await axeMethods.navigateToSpecificPageAndPerformScan('admin/maintenance/staff');
         });
 
+        await test.step(`Navigate to the Admin-maintenance-staff-details page`, async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan('admin/maintenance/staff-details');
+        });
+
         await test.step(`Navigate to the Admin-help page`, async () => {
             await axeMethods.navigateToSpecificPageAndPerformScan('admin/help');
         });
 
+        // Admin Section - Create Page - ONLY several pages taken
+
+        await test.step(`Navigate to the Admin-maintenance-case-detail-add page`, async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan('admin/maintenance/case-detail/add');
+        });
+
+        await test.step(`Navigate to the Admin-maintenance-court-locations-add page`, async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan('admin/maintenance/court-locations/add');
+        });
+
+        await test.step(`Navigate to the Admin-maintenance-attorneys-add page`, async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan('admin/maintenance/attorneys/add');
+        });
+
+        // Admin Section - Edit Page - ONLY several pages taken
+
+        await test.step('Navigate to specific Case Detail record and perform scan', async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan(`admin/maintenance/case-detail/${preparedCaseDetailId}/edit`);
+        })
+
+        await test.step('Navigate to specific Attorney record and perform scan', async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan(`admin/maintenance/attorneys/${preparedAttorneyId}/edit`);
+        })
+
+        await test.step('Navigate to specific Attorney record and perform scan', async () => {
+            await axeMethods.navigateToSpecificPageAndPerformScan(`admin/maintenance/court-locations/${preparedCourtLocationId}/edit`);
+        })
 
     });
 
