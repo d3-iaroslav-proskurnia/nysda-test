@@ -28,6 +28,11 @@ test.describe('Accessibility fast check suite @accessibility', ()=> {
     test(`Scanning pages within app`, async ({calendarPage, axeMethods,}) => {
         test.slow(); // since lots of scanning, it takes approx 5 minutes
 
+        // data init
+        const preparedCaseDetailId = '117899274';
+        const preparedAttorneyId = '30408704';
+        const preparedCourtLocationId = '4587520';
+
         await test.step(`Navigate to the Home page -> Upcoming tab`, async () => {
             await axeMethods.navigateToSpecificPageAndPerformScan('?tab=upcoming');
         });
@@ -134,19 +139,13 @@ test.describe('Accessibility fast check suite @accessibility', ()=> {
 
         // Admin Section - Edit Page - ONLY several pages taken
 
-        const preparedCaseDetailId = '117899274';
-
         await test.step('Navigate to specific Case Detail record and perform scan', async () => {
             await axeMethods.navigateToSpecificPageAndPerformScan(`admin/maintenance/case-detail/${preparedCaseDetailId}/edit`);
         })
 
-        const preparedAttorneyId = '30408704';
-
         await test.step('Navigate to specific Attorney record and perform scan', async () => {
             await axeMethods.navigateToSpecificPageAndPerformScan(`admin/maintenance/attorneys/${preparedAttorneyId}/edit`);
         })
-
-        const preparedCourtLocationId = '4587520';
 
         await test.step('Navigate to specific Attorney record and perform scan', async () => {
             await axeMethods.navigateToSpecificPageAndPerformScan(`admin/maintenance/court-locations/${preparedCourtLocationId}/edit`);
