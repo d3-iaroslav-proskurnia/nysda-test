@@ -19,6 +19,5 @@ export class Axe_accessability_Methods extends GlobalActionsAndElements {
     @axeScan()
     public async findElementAndScanPageState(elementToFind:Locator){
         await expect(elementToFind).toBeVisible();
-        await this.page.waitForTimeout(1000);
     }
 }

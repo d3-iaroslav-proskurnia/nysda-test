@@ -15,7 +15,7 @@ if (!ENV || ![`local`, `dev`, `qa`, `stg`].includes(ENV)) {
   );
   process.exit();
 }
-process.env.API_URL = testConfig[ENV].apiUrl;
+process.env.API_URL = testConfig[ENV].cmsApiUrl;
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -71,6 +71,7 @@ export default defineConfig({
         trace: 'retain-on-failure',
       },
       testMatch: '**/*.authenticated.*.ts',
+
       dependencies: ['auth_setup'],
     },
 
@@ -98,6 +99,19 @@ export default defineConfig({
       testMatch: '**/accessability-check.spec.ts',
       dependencies: ['auth_setup'],
     },
+
+    // {
+    //   name: 'accessability_authenticated',
+    //   use: {
+    //     storageState: AUTH_FILE_PATH,
+    //     ...devices['Desktop Chrome'],
+    //     screenshot: 'only-on-failure',
+    //     video: 'retain-on-failure',
+    //     trace: 'retain-on-failure',
+    //   },
+    //   testMatch: '**/accessability.authenticated.spec.ts',
+    //   dependencies: ['auth_setup'],
+    // },
 
     // {
     //   name: 'Microsoft Edge authenticated',
