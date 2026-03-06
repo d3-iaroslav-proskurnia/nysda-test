@@ -9,9 +9,7 @@ const test = baseTest.extend<{
   },
 });
 test.describe('Homepage', () => {
-  test(`Verify Homepage data`, async ({
-    homePage,
-  }) => {
+  test(`Verify Homepage data`, async ({ homePage }) => {
     await test.step(`Navigate to the "Lead From Scratch" page by URL`, async () => {
       await homePage.navigateByURL();
     });

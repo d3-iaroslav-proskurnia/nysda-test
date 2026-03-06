@@ -1,25 +1,24 @@
 export interface CriminalCaseEntity {
-    // Case Type data
-    caseType: string;
-    matter: string;
+  // Case Type data
+  caseType: string;
+  matter: string;
 
+  // Case details info
+  openDate: string;
+  totalDefendants: number;
 
-    // Case details info
-    openDate: string;
-    totalDefendants: number;
+  // Case events info
+  firstCourtDate?: string;
+  time?: string;
 
-    // Case events info
-    firstCourtDate?: string;
-    time?: string;
-
-    // Client special value
-    nameId: string;
+  // Client special value
+  nameId: string;
 }
 
 export const simpleCriminalCaseExample: CriminalCaseEntity = {
-    caseType: 'DRUG',
-    matter: 'Criminal',
-    nameId: '',
-    openDate:'',
-    totalDefendants: 1,
-}
+  caseType: 'DRUG',
+  matter: 'Criminal',
+  nameId: '',
+  openDate: '',
+  totalDefendants: 1,
+};

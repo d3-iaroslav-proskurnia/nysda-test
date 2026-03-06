@@ -15,29 +15,28 @@ const auth_setup = baseTest.extend<{
   },
 });
 
-auth_setup(
-  'authenticate',
-  async ({ page, loginPage, homePage }) => {
-    await auth_setup.step(`Navigate to Application`, async () => {
-      await loginPage.navigateByURL();
-    });
+auth_setup('authenticate', async ({ page, loginPage, homePage }) => {
+  await auth_setup.step(`Navigate to Application`, async () => {
+    await loginPage.navigateByURL();
+  });
 
-    await auth_setup.step(`Login to application`, async () => {
-      await loginPage.loginToApplication();
-    });
+  await auth_setup.step(`Login to application`, async () => {
+    await loginPage.loginToApplication();
+  });
 
-    await auth_setup.step(
-      `Verify User is logged in and Logo is visible`,
-      async () => {
-        await page.waitForLoadState('load'); // Waits for the page to be fully loaded
-        await expect(homePage.Logo).toBeVisible();
-        await expect(homePage.LogoutBttn).toBeVisible();
-        // get Access Token
-        process.env['ADMIN_ACCESS_TOKEN'] = await page.evaluate(() => localStorage.getItem('NYSDA-ACCESS-TOKEN'));
-      },
-    );
+  await auth_setup.step(
+    `Verify User is logged in and Logo is visible`,
+    async () => {
+      await page.waitForLoadState('load'); // Waits for the page to be fully loaded
+      await expect(homePage.Logo).toBeVisible();
+      await expect(homePage.LogoutBttn).toBeVisible();
+      // get Access Token
+      process.env['ADMIN_ACCESS_TOKEN'] = await page.evaluate(() =>
+        localStorage.getItem('NYSDA-ACCESS-TOKEN'),
+      );
+    },
+  );
 
-    // Save the authentication state to a file
-    await page.context().storageState({ path: AUTH_FILE_PATH });
-  },
-);
+  // Save the authentication state to a file
+  await page.context().storageState({ path: AUTH_FILE_PATH });
+});

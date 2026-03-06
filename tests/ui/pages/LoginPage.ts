@@ -1,8 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { testConfig } from 'testConfig';
 import { ENV } from 'playwright.config';
-import {axeScan} from "axe-playwright-report";
-import {GlobalActionsAndElements} from "@pages/global-actions-and-elements";
+import { axeScan } from 'axe-playwright-report';
+import { GlobalActionsAndElements } from '@pages/global-actions-and-elements';
 
 // TODO: FILE is only copy/pasted. Require Review & change locators & methods
 export class LoginPage extends GlobalActionsAndElements {
@@ -19,13 +19,19 @@ export class LoginPage extends GlobalActionsAndElements {
   constructor(page: Page) {
     super(page);
     this.Logo = page.locator('img.logo');
-    this.Title = page.getByRole('heading', {name: 'Log In to your account'});
-    this.WelcomeText = page.locator('p', { hasText: 'Welcome back! Enter your email and password to continue.' });
-    this.EmailAddressInput = page.getByRole('textbox', { name: 'Email' })
+    this.Title = page.getByRole('heading', { name: 'Log In to your account' });
+    this.WelcomeText = page.locator('p', {
+      hasText: 'Welcome back! Enter your email and password to continue.',
+    });
+    this.EmailAddressInput = page.getByRole('textbox', { name: 'Email' });
     this.PasswordInput = page.locator('input[type="password"]');
-    this.ShowHidePasswordButton = page.getByRole('button', { name: 'display the password' });
-    this.LoginBttn = page.getByRole('button', { name: 'Log in' })
-    this.ForgotPasswordLink = page.getByRole('link', { name: 'Forgot password?' });
+    this.ShowHidePasswordButton = page.getByRole('button', {
+      name: 'display the password',
+    });
+    this.LoginBttn = page.getByRole('button', { name: 'Log in' });
+    this.ForgotPasswordLink = page.getByRole('link', {
+      name: 'Forgot password?',
+    });
     this.ProgressBar = page.locator('progressbar');
   }
 
