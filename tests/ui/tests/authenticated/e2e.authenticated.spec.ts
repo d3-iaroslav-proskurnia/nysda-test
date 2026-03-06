@@ -177,6 +177,16 @@ test.describe('End-to-end basic tests', () => {
             await expect(casesPage.getRowByCaseId(createdCaseId)).toContainText(formattedCaseFileNumber);
         })
 
+        await test.step('Side panel scan', async () => {
+            const neededRow = casesPage.tableRow.filter({hasText:clientFirstName}).first();
+            const tabListElement = page.locator('[role="tablist"]');
+            await neededRow.click();
+            await expect(tabListElement).toBeVisible();
+
+            // scan
+            await axeMethods.findElementAndScanPageState(tabListElement);
+        })
+
 
     })
 
@@ -186,7 +196,6 @@ test.describe('End-to-end basic tests', () => {
                                                                                                                   addNewClientPage,
                                                                                                                   axeMethods,
                                                                                                                   addNewCasePage,
-                                                                                                                  casesPage,
                                                                                                                   caseDetailsPage
                                                                                                               }) => {
 
@@ -253,9 +262,7 @@ test.describe('End-to-end basic tests', () => {
 
     })
 
-    test('Navigate to specific Client for Axe scans @accessibility', async ({ page,
-                                                                              clientProfilePage,
-                                                                              axeMethods}) => {
+    test('Navigate to specific Client for Axe scans @accessibility', async ({clientProfilePage, axeMethods}) => {
 
         // data init
         const preparedClientId = '560137745';
