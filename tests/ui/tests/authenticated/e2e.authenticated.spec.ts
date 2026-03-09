@@ -46,7 +46,7 @@ const test = baseTest.extend<{
 });
 
 test.describe('End-to-end basic tests', () => {
-  test('Add New Criminal Case through adding Client with ONLY Required data via UI + verifications', async ({
+  test('Add New Criminal Case through adding Client with ONLY Required data via UI + verifications @smoke', async ({
     page,
     request,
     clientsPage,
@@ -229,7 +229,7 @@ test.describe('End-to-end basic tests', () => {
     });
   });
 
-  test('Create new Case via API + Case page verifications', async ({
+  test('Create new Case via API + Case page verifications @smoke', async ({
     page,
     request,
     addNewClientPage,
@@ -278,6 +278,119 @@ test.describe('End-to-end basic tests', () => {
         caseDetailsPage.staticPageTitle,
       );
     });
+  });
+
+  test('Create new Case via API + Update Case on UI @smoke', async ({
+    page,
+    request,
+    addNewClientPage,
+    axeMethods,
+    addNewCasePage,
+    caseDetailsPage,
+  }) => {
+    // data init
+    let clientData: any;
+    let caseData: any;
+    let lookupsData: any;
+    const indexToLook = 0; // controls index of data to be taken
+    const updatedData = {
+      office: undefined,
+      intakeType: undefined,
+      legalStatus: undefined,
+      attorney: undefined,
+      court: undefined,
+      judge: undefined,
+    };
+    // special locators
+    const caseDetailsSctn = caseDetailsPage.caseDetailsSection;
+
+    await test.step('Navigate to home page', async () => {
+      await page.goto(`/`, { waitUntil: 'load' });
+    });
+
+    await test.step('Created client via API and get data', async () => {
+      clientData =
+        await addNewClientPage.createRandomNewClientViaApiAndReturnData(
+          request,
+        );
+    });
+
+    await test.step('Created new FamilyCase for created client via API and get data', async () => {
+      caseData =
+        await addNewCasePage.createNewFamilyCaseViaApiAndReturnFullData(
+          request,
+          clientData.nameId,
+        );
+    });
+
+    await test.step('Navigate to created case details page', async () => {
+      await page.goto(`/cases/${caseData.id}/details`, { waitUntil: 'load' });
+    });
+
+    await test.step('Case page verification', async () => {
+      const formattedCaseFileNumber =
+        caseDetailsPage.convertCaseFileNumberToFormattedString(
+          caseData.fileNumber,
+        );
+      await expect(caseDetailsPage.staticPageTitle).toHaveText(
+        `Case No. ${formattedCaseFileNumber}`,
+      );
+    });
+
+    await test.step('Get all lookups values via API', async () => {
+      lookupsData = await caseDetailsPage.getLookupsDataViaApi(request);
+      // setting needed data for update
+      updatedData.office = lookupsData.offices[indexToLook].displayName;
+      updatedData.intakeType = lookupsData.intakeTypes[indexToLook].displayName;
+      updatedData.legalStatus =
+        lookupsData.legalStatuses[indexToLook].displayName;
+      updatedData.attorney = lookupsData.allAttorneys[indexToLook].displayName;
+      updatedData.court = lookupsData.courts[indexToLook].displayName;
+      updatedData.judge = lookupsData.judges[indexToLook].displayName;
+    });
+
+    await test.step('Click on "Edit" button within "Case Details" section', async () => {
+      await caseDetailsSctn
+        .locator(caseDetailsPage.getButtonByName('Edit'))
+        .click();
+      await expect(
+        caseDetailsSctn.locator(caseDetailsPage.getButtonByName('Save')),
+      ).toBeVisible();
+    });
+
+    await test.step('Populating fields with values', async () => {
+      await caseDetailsPage.setValueIntoDropdownInputField(
+        caseDetailsPage.getInputFieldLocatorByName('office'),
+        updatedData.office,
+      );
+      await caseDetailsPage.setValueIntoDropdownInputField(
+        caseDetailsPage.getInputFieldLocatorByName('intakeType'),
+        updatedData.intakeType,
+      );
+      await caseDetailsPage.setValueIntoDropdownInputField(
+        caseDetailsPage.getInputFieldLocatorByName('legalStatus'),
+        updatedData.legalStatus,
+      );
+      await caseDetailsPage.setValueIntoDropdownInputField(
+        caseDetailsPage.getInputFieldLocatorByName('attorney'),
+        updatedData.attorney,
+      );
+      await caseDetailsPage.setValueIntoDropdownInputField(
+        caseDetailsPage.getInputFieldLocatorByName('court'),
+        updatedData.court,
+      );
+      await caseDetailsPage.setValueIntoDropdownInputField(
+        caseDetailsPage.getInputFieldLocatorByName('judge'),
+        updatedData.judge,
+      );
+    });
+
+    await test.step('Click on "Save" and verify Success message', async () => {
+      const expectedAlertText = 'Case have been updated successfully';
+      await caseDetailsSctn.locator(caseDetailsPage.getButtonByName('Save')).click();
+      await expect(caseDetailsPage.anyAlertSnackbar.filter({hasText:expectedAlertText})).toBeVisible();
+    })
+
   });
 
   test('Navigate to specific Case for Axe scans @accessibility', async ({
