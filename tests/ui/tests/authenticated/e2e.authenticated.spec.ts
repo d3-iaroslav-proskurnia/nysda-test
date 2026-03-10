@@ -550,6 +550,19 @@ test.describe('End-to-end basic tests', () => {
         clientProfilePage.alsoKnownAsButton,
       );
     });
+
+    // Scan Clien page in EDIT
+    await test.step('Click on "Edit" button within "Client Details" section', async () => {
+      await clientProfilePage.editButton.click();
+      await expect(clientProfilePage.saveButton).toBeVisible();
+    });
+
+    await test.step('Scan page for specific locator', async () => {
+      await axeMethods.findElementAndScanPageState(
+        clientProfilePage.saveButton,
+      );
+    });
+
   });
 
   test('Additional specific modals scans on Case Details Page @accessibility', async ({
