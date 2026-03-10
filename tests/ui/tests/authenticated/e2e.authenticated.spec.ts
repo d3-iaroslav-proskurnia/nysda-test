@@ -1,4 +1,5 @@
 import { test as baseTest, expect, Locator } from '@playwright/test';
+import {DashboardLandingPage} from '@pages/dashboard-landing-page';
 import { ClientsPage } from '@pages/clients/clients-page';
 import { AddNewClientPage } from '@pages/clients/add-new-client-page';
 import { Axe_accessability_Methods } from '@pages/axe-accessability-methods';
@@ -10,6 +11,7 @@ import { ClientProfilePage } from '@pages/clients/client-profile-page';
 import { simpleCriminalCaseExample } from '@lib/storage/cases/criminal-case-storage';
 
 const test = baseTest.extend<{
+  dashboardLandingPage: DashboardLandingPage;
   clientsPage: ClientsPage;
   addNewClientPage: AddNewClientPage;
   axeMethods: Axe_accessability_Methods;
@@ -19,6 +21,9 @@ const test = baseTest.extend<{
   caseClosingFormPage: SingleCaseClosingFormPage;
   clientProfilePage: ClientProfilePage;
 }>({
+  dashboardLandingPage: async ({ page }, use) => {
+    await use(new DashboardLandingPage(page));
+  },
   clientsPage: async ({ page }, use) => {
     await use(new ClientsPage(page));
   },
@@ -46,6 +51,94 @@ const test = baseTest.extend<{
 });
 
 test.describe('End-to-end basic tests', () => {
+
+  test('Landing page navigation elements check @smoke', async ({
+    page,
+    dashboardLandingPage,
+  }) => {
+
+    // data init
+    const homelinkText = 'PDCMS';
+    const calendarlinkText = 'Calendar';
+    const clientslinkText = 'Clients';
+    const caseslinkText = 'Cases';
+    const reportslinkText = 'Reports';
+    const helplinkText = 'Help';
+    const logOutButtonText = 'Log out';
+
+    await test.step('Navigate to the "Clients" page by URL', async () => {
+      await page.goto('/',{waitUntil:"load"});
+    });
+
+    await test.step('Verify default extended state', async () => {
+      await expect(dashboardLandingPage.navCollapseButton).toBeVisible();
+      await expect(dashboardLandingPage.homeLink).toContainText(homelinkText);
+      await expect(dashboardLandingPage.calendarLink).toContainText(
+        calendarlinkText,
+      );
+      await expect(dashboardLandingPage.clientsLink).toContainText(
+        clientslinkText,
+      );
+      await expect(dashboardLandingPage.casesLink).toContainText(caseslinkText);
+      await expect(dashboardLandingPage.reportsLink).toContainText(
+        reportslinkText,
+      );
+      await expect(dashboardLandingPage.helpLink).toContainText(helplinkText);
+      await expect(dashboardLandingPage.logOutButton).toContainText(
+        logOutButtonText,
+      );
+    });
+
+    await test.step('Collapsing side menu', async () => {
+      await dashboardLandingPage.navCollapseButton.click();
+      await expect(dashboardLandingPage.navExpandButton).toBeVisible();
+      await expect(dashboardLandingPage.navCollapseButton).not.toBeVisible();
+    })
+
+    await test.step('Verification for collapsed side menu', async () => {
+      await expect(dashboardLandingPage.homeLink).not.toContainText(homelinkText);
+      await expect(dashboardLandingPage.calendarLink).not.toContainText(
+        calendarlinkText,
+      );
+      await expect(dashboardLandingPage.clientsLink).not.toContainText(
+        clientslinkText,
+      );
+      await expect(dashboardLandingPage.casesLink).not.toContainText(caseslinkText);
+      await expect(dashboardLandingPage.reportsLink).not.toContainText(
+        reportslinkText,
+      );
+      await expect(dashboardLandingPage.helpLink).not.toContainText(helplinkText);
+      await expect(dashboardLandingPage.logOutButton).not.toContainText(
+        logOutButtonText,
+      );
+    })
+
+    await test.step('Expanding side menu back', async () => {
+      await dashboardLandingPage.navExpandButton.click();
+      await expect(dashboardLandingPage.navExpandButton).not.toBeVisible();
+      await expect(dashboardLandingPage.navCollapseButton).toBeVisible();
+    })
+
+    await test.step('Verify extended state', async () => {
+      await expect(dashboardLandingPage.homeLink).toContainText(homelinkText);
+      await expect(dashboardLandingPage.calendarLink).toContainText(
+        calendarlinkText,
+      );
+      await expect(dashboardLandingPage.clientsLink).toContainText(
+        clientslinkText,
+      );
+      await expect(dashboardLandingPage.casesLink).toContainText(caseslinkText);
+      await expect(dashboardLandingPage.reportsLink).toContainText(
+        reportslinkText,
+      );
+      await expect(dashboardLandingPage.helpLink).toContainText(helplinkText);
+      await expect(dashboardLandingPage.logOutButton).toContainText(
+        logOutButtonText,
+      );
+    });
+
+  });
+  
   test('Add New Criminal Case through adding Client with ONLY Required data via UI + verifications @smoke', async ({
     page,
     request,
