@@ -55,6 +55,7 @@ test.describe('End-to-end basic tests', () => {
   test('Landing page navigation elements check @smoke', async ({
     page,
     dashboardLandingPage,
+    axeMethods,
   }) => {
 
     // data init
@@ -111,6 +112,9 @@ test.describe('End-to-end basic tests', () => {
       await expect(dashboardLandingPage.logOutButton).not.toContainText(
         logOutButtonText,
       );
+
+      // scan
+      await axeMethods.findElementAndScanPageState(dashboardLandingPage.helpLink);
     })
 
     await test.step('Expanding side menu back', async () => {
