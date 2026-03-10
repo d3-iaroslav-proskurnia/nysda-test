@@ -1,4 +1,4 @@
-import { test as baseTest, expect, Locator } from '@playwright/test';
+import { test as baseTest, expect } from '@playwright/test';
 import { Axe_accessability_Methods } from '@pages/axe-accessability-methods';
 import { HomePage } from '@pages/HomePage';
 import { CalendarPage } from '@pages/calendar-page';
@@ -24,13 +24,8 @@ test.describe('Accessibility fast check suite @accessibility', () => {
     console.log(`Starting test with name: "${test.info().title}"`);
   });
 
-  test(`Scanning pages within app`, async ({ calendarPage, axeMethods }) => {
-    test.slow(); // since lots of scanning, it takes approx 5 minutes
-
-    // data init
-    const preparedCaseDetailId = '117899274';
-    const preparedAttorneyId = '30408704';
-    const preparedCourtLocationId = '4587520';
+  test(`Scanning pages within app (No Admin Pages)`, async ({ calendarPage, axeMethods }) => {
+    test.slow();
 
     await test.step(`Navigate to the Home page -> Upcoming tab`, async () => {
       await axeMethods.navigateToSpecificPageAndPerformScan('?tab=upcoming');
@@ -89,8 +84,15 @@ test.describe('Accessibility fast check suite @accessibility', () => {
     await test.step(`Navigate to the HELP page`, async () => {
       await axeMethods.navigateToSpecificPageAndPerformScan('help');
     });
+});
 
-    // Admin Section - Just in Case - ONLY several pages taken
+    test(`Scanning ADMIN pages ONLY`, async ({axeMethods }) => {
+      test.slow();
+
+      // data init
+      const preparedCaseDetailId = '117899274';
+      const preparedAttorneyId = '30408704';
+      const preparedCourtLocationId = '4587520';
 
     await test.step(`Navigate to the Admin-account-users page`, async () => {
       await axeMethods.navigateToSpecificPageAndPerformScan(
@@ -149,8 +151,6 @@ test.describe('Accessibility fast check suite @accessibility', () => {
     await test.step(`Navigate to the Admin-help page`, async () => {
       await axeMethods.navigateToSpecificPageAndPerformScan('admin/help');
     });
-
-    // Admin Section - Create Page - ONLY several pages taken
 
     await test.step(`Navigate to the Admin-maintenance-case-detail-add page`, async () => {
       await axeMethods.navigateToSpecificPageAndPerformScan(
