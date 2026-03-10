@@ -4,9 +4,13 @@ import { GlobalActionsAndElements } from '@pages/global-actions-and-elements';
 
 export class ClientProfilePage extends GlobalActionsAndElements {
   readonly alsoKnownAsButton: Locator;
+  readonly editButton: Locator;
+  readonly saveButton: Locator;
 
   constructor(page: Page) {
     super(page);
     this.alsoKnownAsButton = this.getButtonByName('Also known as');
+    this.editButton = this.getButtonByName('Edit');
+    this.saveButton = this.getButtonByName('Save');
   }
 }
