@@ -53,10 +53,10 @@ const test = baseTest.extend<{
 test.describe('End-to-end basic tests', () => {
 
   test('Landing page navigation elements check @smoke', async ({
-    page,
-    dashboardLandingPage,
-    axeMethods,
-  }) => {
+                                                                 page,
+                                                                 dashboardLandingPage,
+                                                                 axeMethods,
+                                                               }) => {
 
     // data init
     const homelinkText = 'PDCMS';
@@ -68,25 +68,25 @@ test.describe('End-to-end basic tests', () => {
     const logOutButtonText = 'Log out';
 
     await test.step('Navigate to the "Clients" page by URL', async () => {
-      await page.goto('/',{waitUntil:"load"});
+      await page.goto('/', {waitUntil: "load"});
     });
 
     await test.step('Verify default extended state', async () => {
       await expect(dashboardLandingPage.navCollapseButton).toBeVisible();
       await expect(dashboardLandingPage.homeLink).toContainText(homelinkText);
       await expect(dashboardLandingPage.calendarLink).toContainText(
-        calendarlinkText,
+          calendarlinkText,
       );
       await expect(dashboardLandingPage.clientsLink).toContainText(
-        clientslinkText,
+          clientslinkText,
       );
       await expect(dashboardLandingPage.casesLink).toContainText(caseslinkText);
       await expect(dashboardLandingPage.reportsLink).toContainText(
-        reportslinkText,
+          reportslinkText,
       );
       await expect(dashboardLandingPage.helpLink).toContainText(helplinkText);
       await expect(dashboardLandingPage.logOutButton).toContainText(
-        logOutButtonText,
+          logOutButtonText,
       );
     });
 
@@ -99,18 +99,18 @@ test.describe('End-to-end basic tests', () => {
     await test.step('Verification for collapsed side menu', async () => {
       await expect(dashboardLandingPage.homeLink).not.toContainText(homelinkText);
       await expect(dashboardLandingPage.calendarLink).not.toContainText(
-        calendarlinkText,
+          calendarlinkText,
       );
       await expect(dashboardLandingPage.clientsLink).not.toContainText(
-        clientslinkText,
+          clientslinkText,
       );
       await expect(dashboardLandingPage.casesLink).not.toContainText(caseslinkText);
       await expect(dashboardLandingPage.reportsLink).not.toContainText(
-        reportslinkText,
+          reportslinkText,
       );
       await expect(dashboardLandingPage.helpLink).not.toContainText(helplinkText);
       await expect(dashboardLandingPage.logOutButton).not.toContainText(
-        logOutButtonText,
+          logOutButtonText,
       );
 
       // scan
@@ -126,55 +126,55 @@ test.describe('End-to-end basic tests', () => {
     await test.step('Verify extended state', async () => {
       await expect(dashboardLandingPage.homeLink).toContainText(homelinkText);
       await expect(dashboardLandingPage.calendarLink).toContainText(
-        calendarlinkText,
+          calendarlinkText,
       );
       await expect(dashboardLandingPage.clientsLink).toContainText(
-        clientslinkText,
+          clientslinkText,
       );
       await expect(dashboardLandingPage.casesLink).toContainText(caseslinkText);
       await expect(dashboardLandingPage.reportsLink).toContainText(
-        reportslinkText,
+          reportslinkText,
       );
       await expect(dashboardLandingPage.helpLink).toContainText(helplinkText);
       await expect(dashboardLandingPage.logOutButton).toContainText(
-        logOutButtonText,
+          logOutButtonText,
       );
     });
 
   });
-  
+
   test('Add New Criminal Case through adding Client with ONLY Required data via UI + verifications @smoke', async ({
-    page,
-    request,
-    clientsPage,
-    addNewClientPage,
-    axeMethods,
-    addNewCasePage,
-    casesPage,
-  }) => {
+                                                                                                                     page,
+                                                                                                                     request,
+                                                                                                                     clientsPage,
+                                                                                                                     addNewClientPage,
+                                                                                                                     axeMethods,
+                                                                                                                     addNewCasePage,
+                                                                                                                     casesPage,
+                                                                                                                   }) => {
     // Some data init
     const clientInfoStepLabel: Locator =
-      addNewClientPage.getStepLabelByName('Client Information');
+        addNewClientPage.getStepLabelByName('Client Information');
     const additionalDetailsStepLabel: Locator =
-      addNewClientPage.getStepLabelByName('Additional Details');
+        addNewClientPage.getStepLabelByName('Additional Details');
     const financialInfoStepLabel: Locator = addNewClientPage.getStepLabelByName(
-      'Financial information',
+        'Financial information',
     );
     const clientFirstName = `Aqa_${addNewClientPage.generateRandomSmallCharString(6)}`;
     // const clientLastName = `Last${addNewClientPage.generateRandomSmallCharString(6)}`
     const clientCreationAlert = addNewClientPage.getAlertSnackbarByText(
-      'Pre Client have been created successfully',
+        'Pre Client have been created successfully',
     );
     const caseTypeStepLabel: Locator =
-      addNewCasePage.getStepLabelByName('Case Type');
+        addNewCasePage.getStepLabelByName('Case Type');
     const caseDetailsStepLabel: Locator =
-      addNewCasePage.getStepLabelByName('Case Details');
+        addNewCasePage.getStepLabelByName('Case Details');
     const caseEventsStepLabel: Locator =
-      addNewCasePage.getStepLabelByName('Case Events');
+        addNewCasePage.getStepLabelByName('Case Events');
     const invalidCaseStepPopulationAlert: Locator =
-      addNewCasePage.getAlertSnackbarByText(
-        'Some fields on this step are invalid. Please correct them to continue',
-      );
+        addNewCasePage.getAlertSnackbarByText(
+            'Some fields on this step are invalid. Please correct them to continue',
+        );
     const defaultCriminalCaseData = simpleCriminalCaseExample;
 
     // Data to be received
@@ -197,7 +197,7 @@ test.describe('End-to-end basic tests', () => {
 
       // scan
       await axeMethods.findElementAndScanPageState(
-        addNewClientPage.pageStepper,
+          addNewClientPage.pageStepper,
       );
     });
 
@@ -207,7 +207,7 @@ test.describe('End-to-end basic tests', () => {
 
     await test.step('Click on "Add Case to Client" and verify transfer', async () => {
       clientCreationResponse =
-        await addNewClientPage.clickOnAddCaseToClientAndReturnResponse();
+          await addNewClientPage.clickOnAddCaseToClientAndReturnResponse();
       expect(clientCreationResponse.isSuccess).toBe(true);
     });
 
@@ -220,10 +220,10 @@ test.describe('End-to-end basic tests', () => {
 
     await test.step('Add Case page verification', async () => {
       expect(page.url()).toContain(
-        `/clients/${clientCreationResponse.data}/cases/add`,
+          `/clients/${clientCreationResponse.data}/cases/add`,
       );
       await expect(addNewCasePage.staticPageTitle).toContainText(
-        clientFirstName,
+          clientFirstName,
       );
       await expect(caseTypeStepLabel).toContainClass('Mui-active');
       await expect(caseDetailsStepLabel).toContainClass('Mui-disabled');
@@ -236,14 +236,14 @@ test.describe('End-to-end basic tests', () => {
 
       // scan
       await axeMethods.findElementAndScanPageState(
-        invalidCaseStepPopulationAlert,
+          invalidCaseStepPopulationAlert,
       );
     });
 
     await test.step('Populating "Case Matter" section', async () => {
       await addNewCasePage.populateCaseMatterSection(
-        defaultCriminalCaseData.matter,
-        defaultCriminalCaseData.caseType,
+          defaultCriminalCaseData.matter,
+          defaultCriminalCaseData.caseType,
       );
     });
 
@@ -259,8 +259,8 @@ test.describe('End-to-end basic tests', () => {
 
     await test.step('Populate "Open Date" field', async () => {
       await addNewCasePage.fillComplexDateFieldWithFormattedDate(
-        'Open Date',
-        addNewCasePage.getTodayDate_MM_DD_YYYY(),
+          'Open Date',
+          addNewCasePage.getTodayDate_MM_DD_YYYY(),
       );
     });
 
@@ -277,9 +277,9 @@ test.describe('End-to-end basic tests', () => {
     await test.step('Click on "Save And Exit" without setting any data on Optional step', async () => {
       // setting interception
       const addCaseResponsePromise = page.waitForResponse(
-        (response) =>
-          response.url().endsWith('/api/cases?api-version=1.0') &&
-          response.ok(),
+          (response) =>
+              response.url().endsWith('/api/cases?api-version=1.0') &&
+              response.ok(),
       );
       await addNewCasePage.getButtonByName('Save And Exit').click();
       const addCaseResponseInterception = await addCaseResponsePromise;
@@ -290,14 +290,14 @@ test.describe('End-to-end basic tests', () => {
 
     await test.step('Created Case Success Alert verification', async () => {
       formattedCaseFileNumber =
-        await casesPage.getFormattedCaseFileNumberViaApi(
-          request,
-          createdCaseId,
-        );
+          await casesPage.getFormattedCaseFileNumberViaApi(
+              request,
+              createdCaseId,
+          );
       await expect(
-        casesPage.getAlertSnackbarByText(
-          `Case ${formattedCaseFileNumber} has been created`,
-        ),
+          casesPage.getAlertSnackbarByText(
+              `Case ${formattedCaseFileNumber} has been created`,
+          ),
       ).toBeVisible();
       await expect(page).toHaveURL('/cases');
     });
@@ -309,14 +309,14 @@ test.describe('End-to-end basic tests', () => {
     await test.step('Created Case verification within cases table', async () => {
       await expect(casesPage.getRowByCaseId(createdCaseId)).toBeVisible();
       await expect(casesPage.getRowByCaseId(createdCaseId)).toContainText(
-        formattedCaseFileNumber,
+          formattedCaseFileNumber,
       );
     });
 
     await test.step('Side panel scan', async () => {
       const neededRow = casesPage.tableRow
-        .filter({ hasText: clientFirstName })
-        .first();
+          .filter({hasText: clientFirstName})
+          .first();
       const tabListElement = page.locator('[role="tablist"]');
       await neededRow.click();
       await expect(tabListElement).toBeVisible();
@@ -325,6 +325,33 @@ test.describe('End-to-end basic tests', () => {
       await axeMethods.findElementAndScanPageState(tabListElement);
     });
   });
+
+  test('Create Client via API + Criminal Case creation with common fields via UI @smoke', async ({
+                                                                            page,
+                                                                            request,
+                                                                            addNewClientPage,
+                                                                            axeMethods,
+                                                                            addNewCasePage,
+                                                                            caseDetailsPage,
+                                                                          }) => {
+    // data init
+    let clientData: any;
+    let caseData: any;
+
+    await test.step('Created client via API and get data', async () => {
+      clientData =
+          await addNewClientPage.createRandomNewClientViaApiAndReturnData(
+              request,
+          );
+    });
+
+    await test.step('Navigate "Add Case To Client"', async () => {
+      await page.goto(`/clients/${clientData.id}/cases/add`, { waitUntil: 'load' });
+      
+    });
+
+  })
+
 
   test('Create new Case via API + Case page verifications @smoke', async ({
     page,
