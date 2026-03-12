@@ -603,6 +603,9 @@ test.describe('End-to-end basic tests', () => {
         axeMethods.anyOptionInDropdown.first(),
       );
 
+      // close dropdown before clicking Cancel
+      await page.keyboard.press('Escape');
+
       // close modal
       await caseDetailsPage.anyDialogModal
         .locator(caseDetailsPage.getButtonByName('Cancel'))
@@ -610,13 +613,27 @@ test.describe('End-to-end basic tests', () => {
     });
 
     await test.step('Team row adding verifications', async () => {
-      const addTeamButton = page
-        .locator('[id="teams"]')
-        .locator('button', { hasText: 'Team' })
-        .first();
-      const teamTypeField =
-        caseDetailsPage.getInputFieldLocatorByName('teamType');
+      await page.reload({ waitUntil: 'networkidle' });
+
+      // Wait for Teams data to fully load (existing row must be visible)
+      const existingTeamRow = page.getByRole('gridcell', { name: 'LEAD' }).first();
+      await existingTeamRow.waitFor({ state: 'visible', timeout: 3000 });
+
+      const addTeamButton = page.getByRole('button', { name: 'Team', exact: true });
+      await addTeamButton.scrollIntoViewIfNeeded();
+
+      // Cancel any leftover editing row from a previous test run
+      if (await addTeamButton.isDisabled()) {
+        const cancelButton = page.getByRole('button', { name: 'Cancel' });
+        if (await cancelButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+          await cancelButton.click();
+        }
+      }
+
+      await expect(addTeamButton).toBeEnabled({ timeout: 2000 });
       await addTeamButton.click();
+
+      const teamTypeField = page.getByRole('combobox', { name: 'Team Type' });
       await expect(teamTypeField).toBeVisible();
 
       // scan
