@@ -9,6 +9,7 @@ import { SingleCaseDetailsPage } from '@pages/cases/single-case-details.page';
 import { SingleCaseClosingFormPage } from '@pages/cases/single-case-closing-form.page';
 import { ClientProfilePage } from '@pages/clients/client-profile-page';
 import { simpleCriminalCaseExample } from '@lib/storage/cases/criminal-case-storage';
+import {addNewContactsDataForCaseExample} from "@lib/storage/cases/add-new-contact-data-storage";
 
 const test = baseTest.extend<{
   dashboardLandingPage: DashboardLandingPage;
@@ -335,8 +336,17 @@ test.describe('End-to-end basic tests', () => {
                                                                             caseDetailsPage,
                                                                           }) => {
     // data init
+    const indexToLook = 0;
+    let lookupsData:any;
     let clientData: any;
-    let caseData: any;
+    const myUniqueCaseData = {...simpleCriminalCaseExample, caseType:'EXTRADITION' };
+    const clientContactData = addNewContactsDataForCaseExample;
+    clientContactData.address1 = `Aqa Test str, ${addNewCasePage.generateRandomNumberProperLength(4)}`;
+    clientContactData.address2 = `Address2_${addNewCasePage.generateRandomNumberProperLength(5)}`;
+
+    // modals names
+    const changeAddressModal = addNewCasePage.anyDialogModal.filter({has:page.locator('h2',{hasText:'Change Address'})});
+    const addPhoneNumberModal = addNewCasePage.anyDialogModal.filter({has:page.locator('h2',{hasText:'Add Phone Number'})});
 
     await test.step('Created client via API and get data', async () => {
       clientData =
@@ -346,9 +356,47 @@ test.describe('End-to-end basic tests', () => {
     });
 
     await test.step('Navigate "Add Case To Client"', async () => {
-      await page.goto(`/clients/${clientData.id}/cases/add`, { waitUntil: 'load' });
-      
+        await page.goto(`/clients/${clientData.id}/cases/add`, { waitUntil: 'load' });
     });
+
+    await test.step('Get all lookups values via API', async () => {
+      lookupsData = await caseDetailsPage.getLookupsDataViaApi(request);
+      // setting needed data for update
+      myUniqueCaseData.attorney = lookupsData.allAttorneys[indexToLook].displayName;
+      myUniqueCaseData.court = lookupsData.courts[indexToLook].displayName;
+      myUniqueCaseData.judge = lookupsData.judges[indexToLook].displayName;
+      myUniqueCaseData.districtAttorney = lookupsData.districtAttorneys[indexToLook].displayName;
+    });
+
+    await test.step('Open "Change Address" modal', async () => {
+        await addNewCasePage.getButtonByName('Change Address').click()
+        await expect(changeAddressModal).toBeVisible();
+    })
+
+    await test.step('Populate "Change Address" modal', async () => {
+        await addNewCasePage.addNewAddressInAddressModal(clientContactData);
+        await expect(addNewCasePage.anyDialogModal).not.toBeVisible();
+    })
+
+    await test.step('Open "Add Phone number" modal and click on "Add new phone number" radiobutton', async () => {
+        await addNewCasePage.getButtonByName('Add Phone Number').click()
+        await expect(addPhoneNumberModal).toBeVisible();
+        await addNewCasePage.getRadiobuttonByValueName('create').click();
+        await expect(addNewCasePage.getRadiobuttonByValueName('create')).toContainClass('Mui-checked');
+    })
+
+    await test.step('Populate "Add Phone Number" modal', async () => {
+        await addNewCasePage.addNewPhoneNumberInAddPhoneModal(clientContactData);
+        await expect(addNewCasePage.anyDialogModal).not.toBeVisible();
+    })
+
+    await test.step('Populate "Case matter" section', async () => {
+      await addNewCasePage.populateCaseMatterSection(myUniqueCaseData.matter,myUniqueCaseData.caseType);
+    })
+
+    await test.step('Populate "Legal Personnel" section', async () => {
+      await addNewCasePage.populateLegalPersonnelSection(myUniqueCaseData.attorney, myUniqueCaseData.judge, myUniqueCaseData.court, myUniqueCaseData.districtAttorney)
+    })
 
   })
 
