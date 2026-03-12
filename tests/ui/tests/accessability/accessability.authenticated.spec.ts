@@ -86,7 +86,7 @@ test.describe('Accessibility fast check suite @accessibility', () => {
     });
 });
 
-    test(`Scanning ADMIN pages ONLY`, async ({axeMethods }) => {
+    test(`Scanning ADMIN pages ONLY`, async ({page, axeMethods }) => {
       test.slow();
 
       // data init
@@ -173,21 +173,22 @@ test.describe('Accessibility fast check suite @accessibility', () => {
     // Admin Section - Edit Page - ONLY several pages taken
 
     await test.step('Navigate to specific Case Detail record and perform scan', async () => {
-      await axeMethods.navigateToSpecificPageAndPerformScan(
-        `admin/maintenance/case-detail/${preparedCaseDetailId}/edit`,
-      );
+      await page.goto(`/admin/maintenance/case-detail/${preparedCaseDetailId}/edit`, { waitUntil: 'load' });
+      // Wait for all buttons to be enabled (disabled buttons have low contrast — WCAG exempts them)
+      await expect(page.getByRole('button', { name: 'Save' })).toBeEnabled({ timeout: 5000 });
+      await axeMethods.findElementAndScanPageState(page.getByRole('button', { name: 'Save' }));
     });
 
     await test.step('Navigate to specific Attorney record and perform scan', async () => {
-      await axeMethods.navigateToSpecificPageAndPerformScan(
-        `admin/maintenance/attorneys/${preparedAttorneyId}/edit`,
-      );
+      await page.goto(`/admin/maintenance/attorneys/${preparedAttorneyId}/edit`, { waitUntil: 'load' });
+      await expect(page.getByRole('button', { name: 'Save' })).toBeEnabled({ timeout: 5000 });
+      await axeMethods.findElementAndScanPageState(page.getByRole('button', { name: 'Save' }));
     });
 
-    await test.step('Navigate to specific Attorney record and perform scan', async () => {
-      await axeMethods.navigateToSpecificPageAndPerformScan(
-        `admin/maintenance/court-locations/${preparedCourtLocationId}/edit`,
-      );
+    await test.step('Navigate to specific Court Location record and perform scan', async () => {
+      await page.goto(`/admin/maintenance/court-locations/${preparedCourtLocationId}/edit`, { waitUntil: 'load' });
+      await expect(page.getByRole('button', { name: 'Save' })).toBeEnabled({ timeout: 5000 });
+      await axeMethods.findElementAndScanPageState(page.getByRole('button', { name: 'Save' }));
     });
   });
 
@@ -224,12 +225,14 @@ test.describe('Accessibility fast check suite @accessibility', () => {
 
     await test.step(`Scanning calendar and time setter`, async () => {
       await calendarPage.startDateCalendarBtn.click();
+      await page.waitForTimeout(1000); // wait for DatePicker fade-in animation
       await axeMethods.findElementAndScanPageState(
         calendarPage.anyInnerDialogModal,
       );
       await calendarPage.titleDropdown.click();
       await expect(calendarPage.anyInnerDialogModal).not.toBeVisible();
       await calendarPage.startTimeClockBtn.click();
+      await page.waitForTimeout(1000); // wait for TimePicker animation to complete
       await axeMethods.findElementAndScanPageState(
         calendarPage.anyInnerDialogModal,
       );

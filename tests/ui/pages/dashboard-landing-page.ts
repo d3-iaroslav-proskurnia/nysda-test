@@ -18,8 +18,8 @@ export class DashboardLandingPage extends GlobalActionsAndElements {
   constructor(page: Page) {
     super(page);
     //side panel
-    this.navCollapseButton = this.page.locator('button[aria-label="Collapse"]');
-    this.navExpandButton = this.page.locator('button[aria-label="Expand"]');
+    this.navCollapseButton = this.page.locator('button[aria-label="Collapse sidebar"]');
+    this.navExpandButton = this.page.locator('button[aria-label="Expand sidebar"]');
     this.homeLink = this.page.locator('a[href="/"]');
     this.calendarLink = this.page.locator('a[href="/calendar"]');
     this.clientsLink = this.page.locator('a[href="/clients"]');
@@ -27,6 +27,6 @@ export class DashboardLandingPage extends GlobalActionsAndElements {
     this.reportsLink = this.page.locator('a[href="/reports"]');
     this.adminLink = this.page.locator('a[href="/admin"]');
     this.helpLink = this.page.locator('a[href="/help"]');
-    this.logOutButton = this.page.locator('[aria-label="Log out"] button');
+    this.logOutButton = this.page.locator('button[aria-label="Log out"]');
   }
 }
