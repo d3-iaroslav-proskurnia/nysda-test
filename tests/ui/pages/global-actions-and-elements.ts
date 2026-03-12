@@ -6,6 +6,10 @@ export class GlobalActionsAndElements {
   // buttons
   readonly anyButton: Locator;
 
+  // radiobuttons and checkboxes
+  readonly anyRadioButtonContainer: Locator;
+  readonly anyCheckboxContainer: Locator;
+
   // dialogs and Modals
   readonly anyDialogModal: Locator;
   readonly anyInnerDialogModal: Locator;
@@ -29,7 +33,11 @@ export class GlobalActionsAndElements {
     this.staticPageTitle = page.locator('h5.MuiTypography-h5').first(); // always first
 
     // buttons
-    this.anyButton = this.page.locator('button[type="button"]');
+    this.anyButton = this.page.locator('button[type]');
+
+    // radiobuttons and checkboxes
+    this.anyRadioButtonContainer = this.page.locator('.MuiRadio-root');
+    this.anyCheckboxContainer = this.page.locator('.MuiCheckbox-root');
 
     // dialogs and Modals
     this.anyDialogModal = this.page.locator('[role="dialog"]');
@@ -111,6 +119,20 @@ export class GlobalActionsAndElements {
   public getInputFieldLocatorByName(inputFieldName: string): Locator {
     /*** To use properly need to pass the name(text) of element's name attribute as "inputFieldName" parameter ***/
     return this.page.locator(`input[name="${inputFieldName}"]`);
+  }
+
+  public getRadiobuttonByValueName(valueName: string): Locator {
+    /*** Works with value attribute in Radiobutton input ***/
+    return this.anyRadioButtonContainer.filter({
+      has: this.page.locator(`[value="${valueName}"]`),
+    });
+  }
+
+  public getCheckboxByName(checkboxName: string): Locator {
+    /*** Works with name attribute in Checkbox input ***/
+    return this.anyCheckboxContainer.filter({
+      has: this.page.locator(`[name="${checkboxName}"]`),
+    });
   }
 
   public getFirstMatchDropdownOptionLocatorByText(optionText: string) {

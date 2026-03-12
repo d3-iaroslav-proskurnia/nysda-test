@@ -2,6 +2,10 @@ export interface CriminalCaseEntity {
   // Case Type data
   caseType: string;
   matter: string;
+  attorney?: string;
+  judge?: string;
+  court?: string;
+  districtAttorney?: string;
 
   // Case details info
   openDate: string;

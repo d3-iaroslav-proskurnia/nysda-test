@@ -2,28 +2,41 @@ import { Page, Locator, expect, APIRequestContext } from '@playwright/test';
 import { axeScan } from 'axe-playwright-report';
 import { GlobalActionsAndElements } from '@pages/global-actions-and-elements';
 import { populatedFamilyCaseExample1 } from '@lib/storage/cases/family-case-storage';
+import {AddNewContactData} from "@lib/storage/cases/add-new-contact-data-storage";
 
 export class AddNewCasePage extends GlobalActionsAndElements {
-  // Case type Elements
-  readonly caseMatterRadioButtonsGroup: Locator;
-  readonly anyRadioButtonContainer: Locator;
-
-  // Case details
 
   constructor(page: Page) {
     super(page);
-    // Case type Elements
-    this.caseMatterRadioButtonsGroup = this.page.locator('[role="radiogroup"]'); // The only radiogroup on page
-    this.anyRadioButtonContainer = this.page.locator('.MuiRadio-root');
 
-    // Case details
   }
 
-  public getRadiobuttonByValueName(valueName: string): Locator {
-    /*** Works with value attribute in Radiobutton input ***/
-    return this.anyRadioButtonContainer.filter({
-      has: this.page.locator(`[value="${valueName}"]`),
-    });
+  async addNewAddressInAddressModal(contactData: AddNewContactData){
+    /*** Populates Address data from properly received object ***/
+    await this.getInputFieldLocatorByName('addressLine1').fill(contactData.address1);
+    if (contactData.address2){
+      await this.getInputFieldLocatorByName('addressLine2').fill(contactData.address2);
+    }
+    await this.getInputFieldLocatorByName('city').fill(contactData.city);
+    await this.getInputFieldLocatorByName('state').fill(contactData.state);
+    await this.getInputFieldLocatorByName('zipCode').fill(contactData.zipCode);
+
+    // click on save
+    await this.anyDialogModal.locator(this.getButtonByName('Save')).click();
+  }
+
+  async addNewPhoneNumberInAddPhoneModal(contactData: AddNewContactData){
+    /*** Populates Phone data from properly received object ***/
+    await this.getInputFieldLocatorByName('newEntry.number').fill(contactData.phoneNumber);
+    if (contactData.phoneType){
+      await this.getInputFieldLocatorByName('newEntry.type').fill(contactData.phoneType);
+    }
+    if (contactData.acceptText === true){
+      await this.getCheckboxByName('newEntry.acceptText').click(); // default is unchecked
+    }
+
+    // click on save
+    await this.anyDialogModal.locator(this.getButtonByName('Save')).click();
   }
 
   async populateCaseMatterSection(
@@ -33,6 +46,17 @@ export class AddNewCasePage extends GlobalActionsAndElements {
     await this.getRadiobuttonByValueName(matterRadioBtnValue).click();
     await this.getInputFieldLocatorByName('caseType').click();
     await this.getFirstMatchDropdownOptionLocatorByText(caseTypeValue).click();
+  }
+
+  async populateLegalPersonnelSection(attorneyNameValue: string, judgeNameValue:string,courtNameValue:string,daNameValue:string) {
+    await this.getInputFieldLocatorByName('attorney').click();
+    await this.getFirstMatchDropdownOptionLocatorByText(attorneyNameValue).click();
+    await this.getInputFieldLocatorByName('judge').click();
+    await this.getFirstMatchDropdownOptionLocatorByText(judgeNameValue).click();
+    await this.getInputFieldLocatorByName('court').click();
+    await this.getFirstMatchDropdownOptionLocatorByText(courtNameValue).click();
+    await this.getInputFieldLocatorByName('ada').click();
+    await this.getFirstMatchDropdownOptionLocatorByText(daNameValue).click();
   }
 
   async createNewFamilyCaseViaApiAndReturnFullData(
